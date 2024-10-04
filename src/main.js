@@ -1,10 +1,11 @@
-const urlApi = "http://gateway.marvel.com";
+const urlApi = "http://gateway.marvel.com/v1/public/";
 const publicKey = "a0e60653f7b944f5d9b5c09f1138a4aa";
 const ts = "timestamp";
 const hash = "21a300809c6bd1a8f0eeb61d1578a609";
 const parametrosAutenticacion = `?ts=${ts}&apikey=${publicKey}&hash=${hash}`;
 
 const resultadosBusqueda = document.getElementById("resultados-busqueda");
+const cantidadResultados = document.getElementById("cantidad-resultados"); 
 const inputBuscar = document.getElementById("input-buscar");
 const selectType = document.getElementById("select-type");
 const selectOrder = document.getElementById("select-order");
@@ -18,8 +19,6 @@ const btnUltimo = document.getElementById("btn-ultimo");
 
 //INICIO
 //Obtener datos API
-const urlComics = "/v1/public/comics";
-const urlCharacters = "/v1/public/characters";
 
 let dataComics = "";
 let dataCharacters = "";
@@ -27,63 +26,32 @@ let cantidadComics = 0;
 let cantidadCharacters = 0;
 
 function traerAPIs() {
-  if (selectType.value == "comics") {
-    fetch(urlApi + urlComics + parametrosAutenticacion, {
-      method: "GET",
-      headers: {
-        //Authorization: `${publicKey}`,
-        "Content-type": "application/json",
-      },
+  fetch(urlApi + selectType.value + parametrosAutenticacion, {
+    method: "GET",
+    headers: {
+      //Authorization: `${publicKey}`,
+      "Content-type": "application/json",
+    },
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      totalResultados = data.data.total;
+      dataResultados = data.data.results;
+      mostrarCantResultados();
     })
-      .then((response) => response.json())
-      .then((data) => {
-        cantidadComics = data.data.total;
-        dataComics = data.data.results;
-        mostrarCantResultados();
-      })
-      .catch((error) => console.error(error));
-  } else if (selectType.value == "characters") {
-    fetch(urlApi + urlCharacters + parametrosAutenticacion, {
-      method: "GET",
-      headers: {
-        //Authorization: `${publicKey}`,
-        "Content-type": "application/json",
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        cantidadCharacters = data.data.total;
-        dataCharacters = data.data.results;
-        mostrarCantResultados();
-      })
-      .catch((error) => console.error(error));
-  }
+    .catch((error) => console.error(error));
 }
+traerAPIs();
 
-traerAPIs()
+btnBuscar.addEventListener("click", () => {selectType.value="characters"; traerAPIs()})
 
 //Cantidad de resultados totales
 function mostrarCantResultados() {
-  const cantidadResultados = document.createElement("h4");
-  cantidadResultados.classList.add(
-    "py-4",
-    "text-slate-400",
-    "font-bold",
-    "text-sm"
-  );
-  cantidadResultados.id = "cantidad-resultados";
-  if (selectType.value == "comics") {
-    cantidadResultados.textContent = `${cantidadComics} RESULTADOS`;
-  } else if (selectType.value == "characters") {
-    cantidadResultados.textContent = `${cantidadCharacters} RESULTADOS`;
-  }
-  resultados.appendChild(cantidadResultados);
+  cantidadResultados.textContent = `${totalResultados} RESULTADOS`;
 }
+  
 
-traerCharactersAPI();
-traerComicsAPI();
 
-btnBuscar.addEventListener("click", (selectType.value = "characters"));
 /* //Miniaturas y titulos comics inicio
 
 function getThumbsAndTitles() {
