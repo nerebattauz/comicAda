@@ -25,41 +25,42 @@ let dataComics = "";
 let dataCharacters = "";
 let cantidadComics = 0;
 let cantidadCharacters = 0;
-let offset = 0;
 
-function traerComicsAPI() {
-  fetch(urlApi + urlComics + parametrosAutenticacion, {
-    method: "GET",
-    headers: {
-      //Authorization: `${publicKey}`,
-      "Content-type": "application/json",
-    },
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      cantidadComics = data.data.total;
-      dataComics = data.data.results;
-      mostrarCantResultados();
+function traerAPIs() {
+  if (selectType.value == "comics") {
+    fetch(urlApi + urlComics + parametrosAutenticacion, {
+      method: "GET",
+      headers: {
+        //Authorization: `${publicKey}`,
+        "Content-type": "application/json",
+      },
     })
-    .catch((error) => console.error(error));
+      .then((response) => response.json())
+      .then((data) => {
+        cantidadComics = data.data.total;
+        dataComics = data.data.results;
+        mostrarCantResultados();
+      })
+      .catch((error) => console.error(error));
+  } else if (selectType.value == "characters") {
+    fetch(urlApi + urlCharacters + parametrosAutenticacion, {
+      method: "GET",
+      headers: {
+        //Authorization: `${publicKey}`,
+        "Content-type": "application/json",
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        cantidadCharacters = data.data.total;
+        dataCharacters = data.data.results;
+        mostrarCantResultados();
+      })
+      .catch((error) => console.error(error));
+  }
 }
 
-function traerCharactersAPI() {
-  fetch(urlApi + urlCharacters + parametrosAutenticacion, {
-    method: "GET",
-    headers: {
-      //Authorization: `${publicKey}`,
-      "Content-type": "application/json",
-    },
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      cantidadCharacters = data.data.total;
-      dataCharacters = data.data.results;
-      mostrarCantResultados();
-    })
-    .catch((error) => console.error(error));
-}
+traerAPIs()
 
 //Cantidad de resultados totales
 function mostrarCantResultados() {
@@ -73,15 +74,16 @@ function mostrarCantResultados() {
   cantidadResultados.id = "cantidad-resultados";
   if (selectType.value == "comics") {
     cantidadResultados.textContent = `${cantidadComics} RESULTADOS`;
-  } else {
+  } else if (selectType.value == "characters") {
     cantidadResultados.textContent = `${cantidadCharacters} RESULTADOS`;
   }
   resultados.appendChild(cantidadResultados);
 }
 
-traerCharactersAPI()
-traerComicsAPI()
+traerCharactersAPI();
+traerComicsAPI();
 
+btnBuscar.addEventListener("click", (selectType.value = "characters"));
 /* //Miniaturas y titulos comics inicio
 
 function getThumbsAndTitles() {
