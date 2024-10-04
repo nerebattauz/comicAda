@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Document</title>
+  </head>
+
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Freeman&family=Poetsen+One&display=swap");
+    @import url("https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap");
+    header {
+      font-family: "Freeman", sans-serif;
+      font-weight: 800;
+    }
+    .bg-hero {
+      width: 100%;
+      height: 400px;
+      background-image: url(./assets/personajes-de-marvel.webp);
+      background-position-x: center;
+      background-size: cover;
+    }
+    section main {
+      font-family: "Open Sans", sans-serif;
+    }
+  </style>
+
+  <body class="w-full">
+    <header>
+      <nav class="h-14 bg-black w-full flex justify-center">
+        <h1
+          class="bg-red-600 inline text-4xl font-bold h-full p-2 text-white m-auto font-oswald"
+        >
+          ADA COMICS
+        </h1>
+      </nav>
+      <div class="bg-hero bg-black"></div>
+    </header>
+
+    <!-- sección busqueda -->
+    <section class="mt-16 mx-6 lg:w-3/4 lg:mx-auto" id="section-busqueda">
+      <div>
+        <h2 class="text-2xl font-bold">Búsqueda</h2>
+      </div>
+      <div
+        class="flex my-6 flex-col justify-between md:flex-row gap-5 md:gap-16"
+      >
+        <div
+          class="inline flex justify-between items-center rounded border focus:border-red-600 py-4 px-4 w-1/2 w-full md:1/2"
+        >
+          <input
+          id="input-buscar"
+            type="text"
+            placeholder="Buscar"
+            class="w-full focus:outline-none text-lg"
+          />
+        </div>
+        <div class="flex gap-4 items-center justify-start w-full md:w-1/2">
+          <div>
+            <label class="mr-4 font-bold text-slate-400">TIPO</label
+            ><select id="select-type" class="font-bold">
+              <option value="comics">COMICS</option>
+              <option value="characters">PERSONAJES</option>
+            </select>
+          </div>
+          <div>
+            <label class="mr-4 font-bold text-slate-400">ORDEN</label
+            ><select id="select-order" class="font-bold">
+              <option value="a-z">A-Z</option>
+              <option value="Z-A">Z-A</option>
+              <option value="Mas nuevos">Más nuevos</option>
+              <option value="Mas viejos">Más viejos</option>
+            </select>
+          </div>
+          
+        </div>
+        <button id="btn-buscar"
+            class="bg-black px-4 py-2 text-white font-bold hover:bg-red-600"
+          >
+            BUSCAR
+          </button>
+      </div>
+    </section>
+
+    <!-- sección comics -->
+    <section class="mt-16 ml-6 mr-0 lg:w-3/4 lg:mx-auto" id="section-comics">
+      <h2 id="resultados" class="text-2xl font-bold">Resultados</h2>
+      <!-- Resultados de la búsqueda -->
+      <div id="resultados-busqueda" class="w-full flex flex-wrap m-auto sm:justify-start">
+        <!-- Cards -->
+<!--         <div id="card-resultados" class="w-full sm:w-1/3 lg:w-1/5 mb-3">
+          <figure id="img-card-resultados" class="">
+            <img
+              id="imagen"
+              class="object-cover items-center justify-center shadow-xl w-11/12 h-auto"
+              src="/assets/Capitan_america.webp"
+              alt=""
+            />
+          </figure>
+          <h3 id="nombre" class="font-bold text-md mt-1">Nombre</h3>
+        </div>
+
+        <div id="card-resultados" class="w-full sm:w-1/3 lg:w-1/5 mb-3">
+            <figure id="img-card-resultados" class="shadow-xl w-11/12 h-auto">
+              <img
+                id="imagen"
+                class="object-cover items-center justify-center"
+                src="/assets/Capitan_america.webp"
+                alt=""
+              />
+            </figure>
+            <h3 id="nombre" class="font-bold text-md mt-1">Nombre</h3>
+          </div>
+
+          <div id="card-resultados" class="sm:w-1/3 lg:w-1/5 mb-3">
+            <figure id="img-card-resultados" class="shadow-xl w-11/12 h-auto">
+              <img
+                id="imagen"
+                class="object-cover items-center justify-center"
+                src="/assets/Capitan_america.webp"
+                alt=""
+              />
+            </figure>
+            <h3 id="nombre" class="font-bold text-md mt-1">Nombre</h3>
+          </div> -->
+
+          
+
+               
+        
+      </div>
+    </section>
+
+    <div
+      id="botones-páginas"
+      class="my-20 flex items-center justify-center gap-5 m-auto"
+    >
+      <button id="btn-primero" class="bg-black w-16 h-16">
+        <i class="fa-solid fa-angles-left text-white"></i>
+      </button>
+      <button id="btn-anterior" class="bg-black w-16 h-16">
+        <i class="fa-solid fa-chevron-left text-white"></i>
+      </button>
+      <button id="btn-siguiente" class="bg-black w-16 h-16">
+        <i class="fa-solid fa-chevron-right text-white"></i>
+      </button>
+      <button id="btn-ultimo" class="bg-black w-16 h-16">
+        <i class="fa-solid fa-angles-right text-white"></i>
+      </button>
+    </div>
+    <footer
+      class="w-full h-20 bg-black text-white flex justify-center items-center font-bold"
+    >
+      Hecho por Nere
+    </footer>
+  </body>
+  <script
+    src="https://kit.fontawesome.com/aa9529ca56.js"
+    crossorigin="anonymous"
+  ></script>
+  <script src="/src/main.js"></script>
+  <script src="../gitignore"></script>
+</html>
