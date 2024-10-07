@@ -22,11 +22,12 @@ const btnUltimo = document.getElementById("btn-ultimo");
 
 let dataResultados = "";
 let totalResultados = 0;
-let urlSearch = new URL(
-  `${urlApi}${selectType.value}${parametrosAutenticacion}`
-);
+let urlSearch = ""
 
 function traerAPIs() {
+  urlSearch = new URL(
+    `${urlApi}${selectType.value}${parametrosAutenticacion}`
+  );
   fetch(urlSearch, {
     method: "GET",
     headers: {
@@ -138,24 +139,20 @@ function getCards() {
 
 // Actualizar resultados
 
-function aplicarBusqueda() {
-  inputBuscar.addEventListener("change", (event) => {
-    inputBuscar.value = event.target.value;
-    const searchParams = urlSearch.searchParams;
-    if(selectType.value = "comics"){
-      searchParams.set("title", `${inputBuscar.value}`);
-      urlSearch.toString();
-      traerAPIs();
-    } else if (selectType.value = "characters") {
-      searchParams.set("name", `${inputBuscar.value}`);
-      urlSearch.toString();
-      traerAPIs();
-    }
+btnBuscar.addEventListener("click", (event) => {
+  const searchParams = urlSearch.searchParams;
+  if (selectType.value == "comics") {
+    searchParams.set("title", `${inputBuscar.value}`);
+    urlSearch.toString();
+    traerAPIs();
+  } else if (selectType.value == "characters") {
+    searchParams.set("name", `${inputBuscar.value}`);
+    urlSearch.toString();
+    traerAPIs();
+  }
+});
 
-  });
-}
-
-btnBuscar.addEventListener("click", aplicarBusqueda());
+//btnBuscar.addEventListener("click", aplicarBusqueda());
 
 /* // Mostrar más resultados
 
