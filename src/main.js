@@ -67,7 +67,7 @@ function getComicCards() {
 
     const tarjetaComic = document.createElement("div");
     tarjetaComic.classList.add("w-full", "sm:w-1/3", "lg:w-1/5", "mb-8");
-    tarjetaComic.id = "tarjeta-comic";
+    tarjetaComic.id = `${comic.id}`;
 
     const imgTarjetaComic = document.createElement("img");
     imgTarjetaComic.classList.add(
@@ -78,7 +78,7 @@ function getComicCards() {
       "w-11/12",
       "h-96"
     );
-    imgTarjetaComic.id = "img-tarjeta-comic";
+    imgTarjetaComic.id = `${comic.id}`;
     imgTarjetaComic.src = `${urlThumbsComic}`;
 
     const tituloTarjetaComic = document.createElement("h3");
@@ -89,6 +89,17 @@ function getComicCards() {
     resultadosBusqueda.appendChild(tarjetaComic);
     tarjetaComic.appendChild(imgTarjetaComic);
     tarjetaComic.appendChild(tituloTarjetaComic);
+
+    tarjetaComic.addEventListener("click", (event) => {
+      let idComic = event.target.id
+      resultados.innerHTML = ""
+      cantidadResultados.innerHTML = ""
+      resultadosBusqueda.innerHTML = ""
+    
+      const prueba = document.createElement("h4")
+      prueba.textContent = `${idComic}`
+      resultadosBusqueda.appendChild(prueba)
+    })
   });
 }
 
@@ -101,7 +112,7 @@ function getCharacterCards() {
 
     const tarjetaCharacter = document.createElement("div");
     tarjetaCharacter.classList.add("w-full", "sm:w-1/4", "lg:w-1/6", "mb-8");
-    tarjetaCharacter.id = "tarjeta-character";
+    tarjetaCharacter.id = `${character.id}`;
 
     const imgTarjetaCharacter = document.createElement("img");
     imgTarjetaCharacter.classList.add(
@@ -131,8 +142,11 @@ function getCharacterCards() {
     resultadosBusqueda.appendChild(tarjetaCharacter);
     tarjetaCharacter.appendChild(imgTarjetaCharacter);
     tarjetaCharacter.appendChild(nombreCharacter);
+
+    tarjetaCharacter.onclick = () => (traerDatosCharacter());
   });
-}
+  };
+
 
 //Obtener cards
 function getCards() {
@@ -192,6 +206,25 @@ selectType.addEventListener("input", () => {
               <option value="-name">Z-A</option>`;
   }
 });
+
+//ingresar a tarjeta Comic
+
+function traerDatosComics() {
+
+  resultados.innerHTML = ""
+  cantidadResultados.innerHTML = ""
+  resultadosBusqueda.innerHTML = ""
+
+  const dataComicsContainer = document.createElement("div")
+  dataComicsContainer.classList.add("flex-col", "mt-16", "mx-6", "lg:w-3/4", "lg:mx-auto")
+
+  const dataComicsDetails = document.createElement("div")
+  dataComicsDetails.classList.add("flex", "flex-col", "sm:flex-row")
+
+  const dataComicsImg = document.createElement("img")
+  dataComicsImg.classList.add("object-cover", "items-center", "justify-center", "shadow-xl", "w-80")
+  
+}
 
 //btnBuscar.addEventListener("click", aplicarBusqueda());
 

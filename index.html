@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -10,7 +10,7 @@
       rel="stylesheet"
     />
     <script src="https://cdn.tailwindcss.com"></script>
-    <title>Document</title>
+    <title>Marvel Comics by Nere</title>
   </head>
 
   <style>
@@ -65,16 +65,17 @@
         </div>
         <div class="flex gap-4 items-center justify-start w-full md:w-1/2">
           <div>
-            <label for="select-type" class="mr-4 font-bold text-slate-400">TIPO</label
+            <label for="select-type" class="mr-4 font-bold text-slate-400"
+              >TIPO</label
             ><select id="select-type" class="font-bold">
               <option value="comics">COMICS</option>
               <option value="characters">PERSONAJES</option>
             </select>
           </div>
           <div>
-            <label for="select-order" class="mr-4 font-bold text-slate-400">ORDEN</label
-            ><select id="select-order" class="font-bold">
-            </select>
+            <label for="select-order" class="mr-4 font-bold text-slate-400"
+              >ORDEN</label
+            ><select id="select-order" class="font-bold"></select>
           </div>
         </div>
         <button
@@ -86,52 +87,44 @@
       </div>
     </section>
 
+
+
+    <!-- data -->
+    <div id="data-comics" class="flex-col mt-16 mx-6 lg:w-3/4 lg:mx-auto">
+      <div class="flex flex-col sm:flex-row">
+        <img
+          class="object-cover items-center justify-center shadow-xl w-80"
+          src="/assets/Capitan_america.webp"
+          alt=""
+        />
+
+      <div class="flex-wrap text-2xl mx-0 my-5 sm:mx-10 sm:my-0 w-100">
+        <h2 class="text-2xl font-bold mb-4">Titulo comic</h2>
+        <h4 class="text-lg font-bold">Publicado:</h4>
+        <h4 class="text-base mb-4 font-medium text-slate-400">fecha</h4>
+        <h4 class="text-lg font-bold">Guionistas:</h4>
+        <h4 class="text-base mb-4 font-medium text-slate-400">guionistas</h4>
+        <h4 class="text-lg font-bold">Descripción:</h4>
+        <h4 class="text-base">Lorem ipsum dolor sit amet consectetur adipisicing elit. Dicta in autem distinctio porro debitis, atque facilis voluptas ab nihil officia cupiditate at asperiores molestias cumque dolor! Facilis eos soluta quia?</h4>
+      </div>
+    </div>
+      <h2 class="text-2xl font-bold my-8">Personajes</h2>
+    </div>
+    
+
+
     <!-- sección comics -->
     <section class="mt-16 ml-6 mr-0 lg:w-3/4 lg:mx-auto" id="section-comics">
       <h2 id="resultados" class="text-2xl font-bold">Resultados</h2>
-      <h4 id="cantidad-resultados" class="py-4 text-slate-400 font-bold text-sm"></h4>
+      <h4
+        id="cantidad-resultados"
+        class="py-4 text-slate-400 font-bold text-sm"
+      ></h4>
       <!-- Resultados de la búsqueda -->
       <div
         id="resultados-busqueda"
         class="w-full flex flex-wrap m-auto sm:justify-start"
-      >
-        <!-- Cards -->
-        <!--         <div id="card-resultados" class="w-full sm:w-1/3 lg:w-1/5 mb-3">
-          <figure id="img-card-resultados" class="">
-            <img
-              id="imagen"
-              class="object-cover items-center justify-center shadow-xl w-11/12 h-auto"
-              src="/assets/Capitan_america.webp"
-              alt=""
-            />
-          </figure>
-          <h3 id="nombre" class="font-bold text-md mt-1">Nombre</h3>
-        </div>
-
-        <div id="card-resultados" class="w-full sm:w-1/3 lg:w-1/5 mb-3">
-            <figure id="img-card-resultados" class="shadow-xl w-11/12 h-auto">
-              <img
-                id="imagen"
-                class="object-cover items-center justify-center"
-                src="/assets/Capitan_america.webp"
-                alt=""
-              />
-            </figure>
-            <h3 id="nombre" class="font-bold text-md mt-1">Nombre</h3>
-          </div>
-
-          <div id="card-resultados" class="sm:w-1/3 lg:w-1/5 mb-3">
-            <figure id="img-card-resultados" class="shadow-xl w-11/12 h-auto">
-              <img
-                id="imagen"
-                class="object-cover items-center justify-center"
-                src="/assets/Capitan_america.webp"
-                alt=""
-              />
-            </figure>
-            <h3 id="nombre" class="font-bold text-md mt-1">Nombre</h3>
-          </div> -->
-      </div>
+      ></div>
     </section>
 
     <div
