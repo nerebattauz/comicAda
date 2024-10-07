@@ -22,7 +22,9 @@ const btnUltimo = document.getElementById("btn-ultimo");
 
 let dataResultados = "";
 let totalResultados = 0;
-let urlSearch = new URL(`${urlApi}${selectType.value}${parametrosAutenticacion}`);
+let urlSearch = new URL(
+  `${urlApi}${selectType.value}${parametrosAutenticacion}`
+);
 
 function traerAPIs() {
   //urlSearch = new URL(`${urlApi}${selectType.value}${parametrosAutenticacion}`);
@@ -48,6 +50,12 @@ traerAPIs();
 //Cantidad de resultados totales
 function mostrarCantResultados() {
   cantidadResultados.textContent = `${totalResultados} RESULTADOS`;
+  if (totalResultados === 0) {
+    const textoNoResultados = document.createElement("h4");
+    textoNoResultados.textContent = "No se encontraron resultados";
+    textoNoResultados.classList.add("text-2xl", "font-bold", "my-7");
+    resultadosBusqueda.appendChild(textoNoResultados);
+  }
 }
 
 // Generar cards characters
@@ -135,8 +143,14 @@ function getCards() {
   }
 }
 
+//Buscar por parametros
 btnBuscar.addEventListener("click", (event) => {
-  urlSearch = new URL(`${urlApi}${selectType.value}${parametrosAutenticacion}`)
+  urlSearch = new URL(`${urlApi}${selectType.value}${parametrosAutenticacion}`);
+  buscarPorTipo();
+  buscarPorOrden();
+});
+
+function buscarPorTipo() {
   const searchParams = urlSearch.searchParams;
   if (selectType.value == "comics") {
     searchParams.delete("name", `${inputBuscar.value}`);
@@ -149,7 +163,34 @@ btnBuscar.addEventListener("click", (event) => {
     urlSearch.toString();
     traerAPIs();
   }
+  if (inputBuscar.value === "") {urlSearch = new URL(`${urlApi}${selectType.value}${parametrosAutenticacion}`), traerAPIs()}
+}
+
+function buscarPorOrden() {
+  const searchParams = urlSearch.searchParams;
+  searchParams.set("orderBy", `${selectOrder.value}`);
+  urlSearch.toString();
+  traerAPIs();
+}
+
+//Cambiar select según tipo
+selectOrder.innerHTML = `<option value="name">A-Z</option> <option value="-name">Z-A</option>`;
+
+selectType.addEventListener("input", () => {
+  if (selectType.value == "comics") {
+    selectOrder.innerHTML = `<option value="title">A-Z</option>
+              <option value="-title">Z-A</option>              
+              <option value="onsaleDate">Más nuevos</option>
+              <option value="-onsaleDate">Más viejos</option>`;
+  } else if (selectType.value == "characters") {
+    selectOrder.innerHTML = `<option value="name">A-Z</option>
+              <option value="-name">Z-A</option>`;
+  }
 });
+
+
+
+
 
 //btnBuscar.addEventListener("click", aplicarBusqueda());
 
