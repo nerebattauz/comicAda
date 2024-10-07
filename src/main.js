@@ -23,7 +23,7 @@ const btnUltimo = document.getElementById("btn-ultimo");
 let dataResultados = "";
 let totalResultados = 0;
 let urlSearch = new URL(
-  `${urlApi}${selectType.value}${parametrosAutenticacion}`
+  `${urlApi}${selectType.value}${parametrosAutenticacion}&orderBy=title`
 );
 
 function traerAPIs() {
@@ -148,49 +148,50 @@ btnBuscar.addEventListener("click", (event) => {
   urlSearch = new URL(`${urlApi}${selectType.value}${parametrosAutenticacion}`);
   buscarPorTipo();
   buscarPorOrden();
+  traerAPIs();
 });
 
 function buscarPorTipo() {
   const searchParams = urlSearch.searchParams;
   if (selectType.value == "comics") {
-    searchParams.delete("name", `${inputBuscar.value}`);
-    searchParams.set("title", `${inputBuscar.value}`);
+    searchParams.delete("nameStartsWith", `${inputBuscar.value}`);
+    searchParams.set("titleStartsWith", `${inputBuscar.value}`);
     urlSearch.toString();
-    traerAPIs();
   } else if (selectType.value == "characters") {
-    searchParams.delete("title", `${inputBuscar.value}`);
-    searchParams.set("name", `${inputBuscar.value}`);
+    searchParams.delete("titleStartsWith", `${inputBuscar.value}`);
+    searchParams.set("nameStartsWith", `${inputBuscar.value}`);
     urlSearch.toString();
-    traerAPIs();
   }
-  if (inputBuscar.value === "") {urlSearch = new URL(`${urlApi}${selectType.value}${parametrosAutenticacion}`), traerAPIs()}
+  if (inputBuscar.value === "") {
+    urlSearch = new URL(
+      `${urlApi}${selectType.value}${parametrosAutenticacion}`
+    );
+  }
 }
 
 function buscarPorOrden() {
   const searchParams = urlSearch.searchParams;
   searchParams.set("orderBy", `${selectOrder.value}`);
   urlSearch.toString();
-  traerAPIs();
 }
 
 //Cambiar select según tipo
-selectOrder.innerHTML = `<option value="name">A-Z</option> <option value="-name">Z-A</option>`;
+selectOrder.innerHTML = `<option value="title">A-Z</option>
+              <option value="-title">Z-A</option>              
+              <option value="-focDate">Más nuevos</option>
+              <option value="focDate">Más viejos</option>`;
 
 selectType.addEventListener("input", () => {
   if (selectType.value == "comics") {
     selectOrder.innerHTML = `<option value="title">A-Z</option>
               <option value="-title">Z-A</option>              
-              <option value="onsaleDate">Más nuevos</option>
-              <option value="-onsaleDate">Más viejos</option>`;
+              <option value="-onsaleDate">Más nuevos</option>
+              <option value="onsaleDate">Más viejos</option>`;
   } else if (selectType.value == "characters") {
     selectOrder.innerHTML = `<option value="name">A-Z</option>
               <option value="-name">Z-A</option>`;
   }
 });
-
-
-
-
 
 //btnBuscar.addEventListener("click", aplicarBusqueda());
 
