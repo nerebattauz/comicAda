@@ -22,12 +22,10 @@ const btnUltimo = document.getElementById("btn-ultimo");
 
 let dataResultados = "";
 let totalResultados = 0;
-let urlSearch = ""
+let urlSearch = new URL(`${urlApi}${selectType.value}${parametrosAutenticacion}`);
 
 function traerAPIs() {
-  urlSearch = new URL(
-    `${urlApi}${selectType.value}${parametrosAutenticacion}`
-  );
+  //urlSearch = new URL(`${urlApi}${selectType.value}${parametrosAutenticacion}`);
   fetch(urlSearch, {
     method: "GET",
     headers: {
@@ -137,15 +135,16 @@ function getCards() {
   }
 }
 
-// Actualizar resultados
-
 btnBuscar.addEventListener("click", (event) => {
+  urlSearch = new URL(`${urlApi}${selectType.value}${parametrosAutenticacion}`)
   const searchParams = urlSearch.searchParams;
   if (selectType.value == "comics") {
+    searchParams.delete("name", `${inputBuscar.value}`);
     searchParams.set("title", `${inputBuscar.value}`);
     urlSearch.toString();
     traerAPIs();
   } else if (selectType.value == "characters") {
+    searchParams.delete("title", `${inputBuscar.value}`);
     searchParams.set("name", `${inputBuscar.value}`);
     urlSearch.toString();
     traerAPIs();
@@ -164,3 +163,5 @@ btnSiguiente.addEventListener("click", () => {
 });
  */
 //Realizar búsqueda
+
+// Actualizar resultados
