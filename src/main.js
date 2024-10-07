@@ -26,6 +26,8 @@ let urlSearch = new URL(
   `${urlApi}${selectType.value}${parametrosAutenticacion}&orderBy=title`
 );
 
+let tarjetaComic = "";
+
 function traerAPIs() {
   //urlSearch = new URL(`${urlApi}${selectType.value}${parametrosAutenticacion}`);
   fetch(urlSearch, {
@@ -63,10 +65,19 @@ function getComicCards() {
   dataResultados.forEach((comic) => {
     const urlThumbsComic =
       `${comic.thumbnail.path}` + "." + `${comic.thumbnail.extension}`;
-    const comicTitle = comic.title;
 
     const tarjetaComic = document.createElement("div");
-    tarjetaComic.classList.add("w-full", "sm:w-1/3", "lg:w-1/5", "mb-8");
+    tarjetaComic.classList.add(
+      "w-full",
+      "sm:w-1/3",
+      "lg:w-1/5",
+      "mb-8",
+      "transition",
+      "ease-in-out",
+      "duration-300",
+      "hover:-translate-y-2",
+      "cursor-pointer"
+    );
     tarjetaComic.id = `${comic.id}`;
 
     const imgTarjetaComic = document.createElement("img");
@@ -83,23 +94,17 @@ function getComicCards() {
 
     const tituloTarjetaComic = document.createElement("h3");
     tituloTarjetaComic.classList.add("font-bold", "text-md", "mt-1", "w-11/12");
-    tituloTarjetaComic.id = "titulo-tarjeta-comic";
-    tituloTarjetaComic.textContent = `${comicTitle}`;
+    tituloTarjetaComic.id = `${comic.id}`;
+    tituloTarjetaComic.textContent = `${comic.title}`;
 
     resultadosBusqueda.appendChild(tarjetaComic);
     tarjetaComic.appendChild(imgTarjetaComic);
     tarjetaComic.appendChild(tituloTarjetaComic);
 
     tarjetaComic.addEventListener("click", (event) => {
-      let idComic = event.target.id
-      resultados.innerHTML = ""
-      cantidadResultados.innerHTML = ""
-      resultadosBusqueda.innerHTML = ""
-    
-      const prueba = document.createElement("h4")
-      prueba.textContent = `${idComic}`
-      resultadosBusqueda.appendChild(prueba)
-    })
+      let infoId = event.target.id;
+      traerInfo(infoId);
+    });
   });
 }
 
@@ -108,10 +113,19 @@ function getCharacterCards() {
   dataResultados.forEach((character) => {
     const urlThumbsCharacter =
       `${character.thumbnail.path}` + "." + `${character.thumbnail.extension}`;
-    const characterName = character.name;
 
     const tarjetaCharacter = document.createElement("div");
-    tarjetaCharacter.classList.add("w-full", "sm:w-1/4", "lg:w-1/6", "mb-8");
+    tarjetaCharacter.classList.add(
+      "w-full",
+      "sm:w-1/4",
+      "lg:w-1/6",
+      "mb-8",
+      "transition",
+      "ease-in-out",
+      "duration-300",
+      "hover:-translate-y-2",
+      "cursor-pointer"
+    );
     tarjetaCharacter.id = `${character.id}`;
 
     const imgTarjetaCharacter = document.createElement("img");
@@ -123,7 +137,7 @@ function getCharacterCards() {
       "w-11/12",
       "h-72"
     );
-    imgTarjetaCharacter.id = "img-tarjeta-character";
+    imgTarjetaCharacter.id = `${character.id}`;
     imgTarjetaCharacter.src = `${urlThumbsCharacter}`;
 
     const nombreCharacter = document.createElement("h3");
@@ -136,17 +150,19 @@ function getCharacterCards() {
       "h-20",
       "text-white"
     );
-    nombreCharacter.id = "titulo-tarjeta-comic";
-    nombreCharacter.textContent = `${characterName}`;
+    nombreCharacter.id = `${character.id}`;
+    nombreCharacter.textContent = `${character.name}`;
 
     resultadosBusqueda.appendChild(tarjetaCharacter);
     tarjetaCharacter.appendChild(imgTarjetaCharacter);
     tarjetaCharacter.appendChild(nombreCharacter);
 
-    tarjetaCharacter.onclick = () => (traerDatosCharacter());
+    tarjetaCharacter.addEventListener("click", (event) => {
+      let infoId = event.target.id;
+      traerInfo(infoId);
+    });
   });
-  };
-
+}
 
 //Obtener cards
 function getCards() {
@@ -209,22 +225,50 @@ selectType.addEventListener("input", () => {
 
 //ingresar a tarjeta Comic
 
-function traerDatosComics() {
-
-  resultados.innerHTML = ""
-  cantidadResultados.innerHTML = ""
-  resultadosBusqueda.innerHTML = ""
-
-  const dataComicsContainer = document.createElement("div")
-  dataComicsContainer.classList.add("flex-col", "mt-16", "mx-6", "lg:w-3/4", "lg:mx-auto")
-
-  const dataComicsDetails = document.createElement("div")
-  dataComicsDetails.classList.add("flex", "flex-col", "sm:flex-row")
-
-  const dataComicsImg = document.createElement("img")
-  dataComicsImg.classList.add("object-cover", "items-center", "justify-center", "shadow-xl", "w-80")
-  
+function traerInfo(infoId) {
+  fetch(urlSearch, {
+    method: "GET",
+    headers: {
+      //Authorization: `${publicKey}`,
+      "Content-type": "application/json",
+    },
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      resultados.innerHTML = "";
+      cantidadResultados.innerHTML = "";
+      resultadosBusqueda.innerHTML = "";
+      dataResultados = data.data.results;
+      const arrayInfo = dataResultados.find((item) => item.id == infoId);
+      console.log(arrayInfo);
+    })
+    .catch((error) => console.error(error));
 }
+
+//const prueba = document.createElement("h4")
+//prueba.textContent = `${idComic}`
+//resultadosBusqueda.appendChild(prueba)
+
+const dataComicsContainer = document.createElement("div");
+dataComicsContainer.classList.add(
+  "flex-col",
+  "mt-16",
+  "mx-6",
+  "lg:w-3/4",
+  "lg:mx-auto"
+);
+
+const dataComicsDetails = document.createElement("div");
+dataComicsDetails.classList.add("flex", "flex-col", "sm:flex-row");
+
+const dataComicsImg = document.createElement("img");
+dataComicsImg.classList.add(
+  "object-cover",
+  "items-center",
+  "justify-center",
+  "shadow-xl",
+  "w-80"
+);
 
 //btnBuscar.addEventListener("click", aplicarBusqueda());
 
