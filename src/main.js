@@ -139,18 +139,23 @@ function getCards() {
 // Actualizar resultados
 
 function aplicarBusqueda() {
-  inputBuscar.addEventListener("input", (event) => {
+  inputBuscar.addEventListener("change", (event) => {
     inputBuscar.value = event.target.value;
     const searchParams = urlSearch.searchParams;
-    searchParams.set("title", `${inputBuscar.value}`);
-    urlSearch.toString();
-    traerAPIs();
+    if(selectType.value = "comics"){
+      searchParams.set("title", `${inputBuscar.value}`);
+      urlSearch.toString();
+      traerAPIs();
+    } else if (selectType.value = "characters") {
+      searchParams.set("name", `${inputBuscar.value}`);
+      urlSearch.toString();
+      traerAPIs();
+    }
+
   });
 }
 
 btnBuscar.addEventListener("click", aplicarBusqueda());
-/*   ; */
-//btnBuscar.addEventListener("click", aplicarBusqueda());
 
 /* // Mostrar más resultados
 
