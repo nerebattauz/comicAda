@@ -44,6 +44,7 @@ function traerAPIs() {
       dataResultados = data.data.results;
       mostrarCantResultados();
       getCards();
+      obtenerInfoObjeto(infoId);
     })
     .catch((error) => console.error(error));
 }
@@ -103,7 +104,7 @@ function getComicCards() {
 
     tarjetaComic.addEventListener("click", (event) => {
       let infoId = event.target.id;
-      traerInfo(infoId);
+      obtenerInfoObjeto(infoId);
     });
   });
 }
@@ -159,7 +160,7 @@ function getCharacterCards() {
 
     tarjetaCharacter.addEventListener("click", (event) => {
       let infoId = event.target.id;
-      traerInfo(infoId);
+      obtenerInfoObjeto(infoId);
     });
   });
 }
@@ -225,50 +226,74 @@ selectType.addEventListener("input", () => {
 
 //ingresar a tarjeta Comic
 
-function traerInfo(infoId) {
-  fetch(urlSearch, {
-    method: "GET",
-    headers: {
-      //Authorization: `${publicKey}`,
-      "Content-type": "application/json",
-    },
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      resultados.innerHTML = "";
-      cantidadResultados.innerHTML = "";
-      resultadosBusqueda.innerHTML = "";
-      dataResultados = data.data.results;
-      const arrayInfo = dataResultados.find((item) => item.id == infoId);
-      console.log(arrayInfo);
-    })
-    .catch((error) => console.error(error));
+function obtenerInfoObjeto(infoId) {
+  resultados.innerHTML = "";
+  cantidadResultados.innerHTML = "";
+  resultadosBusqueda.innerHTML = "";
+  const arrayInfo = dataResultados.find((item) => item.id == infoId);
+  console.log(arrayInfo);
+  detalleObjeto(arrayInfo);
+}
+
+function detalleObjeto(arrayInfo) {
+  //mostrar detalle comics
+  if (selectType.value == "comics") {
+    const fechaPublicacion = new Intl.DateTimeFormat('es-AR').format(
+      new Date(arrayInfo.dates.find((date) => date.type === 'onsaleDate').date)
+    )
+    const autor = arrayInfo.creators.items
+    .filter((autor) => autor.role === 'writer')
+    .map((autor) => autor.name)
+    .join(', ')
+
+    const dataComicsDetails = document.createElement("div");
+    dataComicsDetails.classList.add("flex", "flex-col", "sm:flex-row");
+
+    const dataComicsImg = document.createElement("img");
+    dataComicsImg.classList.add(
+      "object-cover",
+      "items-center",
+      "justify-center",
+      "shadow-xl",
+      "w-80",
+      "h-max-100"
+    );
+    dataComicsImg.src =
+      `${arrayInfo.thumbnail.path}` + "." + `${arrayInfo.thumbnail.extension}`;
+
+    const dataComicsInfo = document.createElement("div");
+    dataComicsInfo.classList.add(
+      "flex-wrap",
+      "text-2xl",
+      "mr-8",
+      "my-5",
+      "sm:mx-10",
+      "sm:my-0",
+      "w-100"
+    );
+    dataComicsInfo.innerHTML = `<h2 class="text-2xl mb-4">${arrayInfo.title}</h2>
+        <h4 class="text-lg font-bold">Publicado:</h4>
+        <h4 class="text-base font-normal mb-4 font-medium text-slate-600">${fechaPublicacion}</h4>
+        <h4 class="text-lg font-bold">Autores:</h4>
+        <h4 class="text-base font-normal mb-4 font-medium text-slate-600">${autor}</h4>
+        <h4 class="text-lg font-bold">Descripción:</h4>
+        <h4 class="text-base font-normal">${arrayInfo.description}</h4>
+
+    `;
+
+    const dataComicsPersonajes = document.createElement("div");
+    dataComicsPersonajes.innerHTML = `<h2 class="text-2xl my-8">Personajes</h2>`;
+
+    resultados.appendChild(dataComicsDetails);
+    dataComicsDetails.appendChild(dataComicsImg);
+    dataComicsDetails.appendChild(dataComicsInfo);
+    resultados.appendChild(dataComicsPersonajes);
+  }
 }
 
 //const prueba = document.createElement("h4")
 //prueba.textContent = `${idComic}`
 //resultadosBusqueda.appendChild(prueba)
-
-const dataComicsContainer = document.createElement("div");
-dataComicsContainer.classList.add(
-  "flex-col",
-  "mt-16",
-  "mx-6",
-  "lg:w-3/4",
-  "lg:mx-auto"
-);
-
-const dataComicsDetails = document.createElement("div");
-dataComicsDetails.classList.add("flex", "flex-col", "sm:flex-row");
-
-const dataComicsImg = document.createElement("img");
-dataComicsImg.classList.add(
-  "object-cover",
-  "items-center",
-  "justify-center",
-  "shadow-xl",
-  "w-80"
-);
 
 //btnBuscar.addEventListener("click", aplicarBusqueda());
 
