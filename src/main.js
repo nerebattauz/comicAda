@@ -27,6 +27,8 @@ let urlSearch = new URL(
 );
 
 let tarjetaComic = "";
+let infoId = 0;
+let arrayInfo = {};
 
 function traerAPIs() {
   //urlSearch = new URL(`${urlApi}${selectType.value}${parametrosAutenticacion}`);
@@ -44,7 +46,6 @@ function traerAPIs() {
       dataResultados = data.data.results;
       mostrarCantResultados();
       getCards();
-      obtenerInfoObjeto(infoId);
     })
     .catch((error) => console.error(error));
 }
@@ -110,11 +111,8 @@ function getComicCards() {
 }
 
 // Generar cards characters
-function getCharacterCards() {
+function getCharacterCards(arrayInfo) {
   dataResultados.forEach((character) => {
-    const urlThumbsCharacter =
-      `${character.thumbnail.path}` + "." + `${character.thumbnail.extension}`;
-
     const tarjetaCharacter = document.createElement("div");
     tarjetaCharacter.classList.add(
       "w-full",
@@ -139,7 +137,8 @@ function getCharacterCards() {
       "h-72"
     );
     imgTarjetaCharacter.id = `${character.id}`;
-    imgTarjetaCharacter.src = `${urlThumbsCharacter}`;
+    imgTarjetaCharacter.src =
+      `${character.thumbnail.path}` + "." + `${character.thumbnail.extension}`;
 
     const nombreCharacter = document.createElement("h3");
     nombreCharacter.classList.add(
@@ -159,7 +158,7 @@ function getCharacterCards() {
     tarjetaCharacter.appendChild(nombreCharacter);
 
     tarjetaCharacter.addEventListener("click", (event) => {
-      let infoId = event.target.id;
+      infoId = event.target.id;
       obtenerInfoObjeto(infoId);
     });
   });
@@ -176,6 +175,7 @@ function getCards() {
 
 //Buscar por parametros
 btnBuscar.addEventListener("click", (event) => {
+  resultados.innerHTML = `<h2 id="resultados" class="text-2xl font-bold">Resultados</h2>`;
   urlSearch = new URL(`${urlApi}${selectType.value}${parametrosAutenticacion}`);
   buscarPorTipo();
   buscarPorOrden();
@@ -231,20 +231,21 @@ function obtenerInfoObjeto(infoId) {
   cantidadResultados.innerHTML = "";
   resultadosBusqueda.innerHTML = "";
   const arrayInfo = dataResultados.find((item) => item.id == infoId);
-  console.log(arrayInfo);
   detalleObjeto(arrayInfo);
 }
+
+const dataComicsPersonajes = document.createElement("div");
 
 function detalleObjeto(arrayInfo) {
   //mostrar detalle comics
   if (selectType.value == "comics") {
-    const fechaPublicacion = new Intl.DateTimeFormat('es-AR').format(
-      new Date(arrayInfo.dates.find((date) => date.type === 'onsaleDate').date)
-    )
+    const fechaPublicacion = new Intl.DateTimeFormat("es-AR").format(
+      new Date(arrayInfo.dates.find((date) => date.type === "onsaleDate").date)
+    );
     const autor = arrayInfo.creators.items
-    .filter((autor) => autor.role === 'writer')
-    .map((autor) => autor.name)
-    .join(', ')
+      .filter((autor) => autor.role === "writer")
+      .map((autor) => autor.name)
+      .join(", ");
 
     const dataComicsDetails = document.createElement("div");
     dataComicsDetails.classList.add("flex", "flex-col", "sm:flex-row");
@@ -281,14 +282,129 @@ function detalleObjeto(arrayInfo) {
 
     `;
 
-    const dataComicsPersonajes = document.createElement("div");
     dataComicsPersonajes.innerHTML = `<h2 class="text-2xl my-8">Personajes</h2>`;
 
     resultados.appendChild(dataComicsDetails);
     dataComicsDetails.appendChild(dataComicsImg);
     dataComicsDetails.appendChild(dataComicsInfo);
     resultados.appendChild(dataComicsPersonajes);
+    personajesComics(arrayInfo);
+  } else if (selectType.value == "characters") {
+    const dataCharactersDetails = document.createElement("div");
+    dataCharactersDetails.classList.add("flex", "flex-col", "sm:flex-row");
+
+    const dataCharactersImg = document.createElement("img");
+    dataCharactersImg.classList.add(
+      "object-cover",
+      "items-center",
+      "justify-center",
+      "shadow-xl",
+      "w-80",
+      "h-max-100"
+    );
+    dataCharactersImg.src =
+      `${arrayInfo.thumbnail.path}` + "." + `${arrayInfo.thumbnail.extension}`;
+
+    const dataCharactersInfo = document.createElement("div");
+    dataCharactersInfo.classList.add(
+      "flex-wrap",
+      "text-2xl",
+      "mr-8",
+      "my-5",
+      "sm:mx-10",
+      "sm:my-0",
+      "w-100"
+    );
+    dataCharactersInfo.innerHTML = `<h2 class="text-2xl mb-4">${arrayInfo.name}</h2>
+          <h4 class="text-lg font-bold">Descripción:</h4>
+          <h4 class="text-base font-normal">${arrayInfo.description}</h4>`;
+
+    resultados.appendChild(dataCharactersDetails);
+    dataCharactersDetails.appendChild(dataCharactersImg);
+    dataCharactersDetails.appendChild(dataCharactersInfo);
+    resultados.appendChild(dataComicsPersonajes);
   }
+}
+
+//////// Traer personajes en comic
+function personajesComics(arrayInfo, infoId) {
+  const characters = arrayInfo.characters.items;
+  characters.forEach((character) => {
+    const tarjetaCharacter = document.createElement("div");
+    tarjetaCharacter.classList.add(
+      "w-full",
+      "sm:w-1/4",
+      "lg:w-1/6",
+      "mb-8",
+      "transition",
+      "ease-in-out",
+      "duration-300",
+      "hover:-translate-y-2",
+      "cursor-pointer"
+    );
+    tarjetaCharacter.id = `${character.id}`;
+
+    const imgTarjetaCharacter = document.createElement("img");
+    imgTarjetaCharacter.classList.add(
+      "object-cover",
+      "items-center",
+      "justify-center",
+      "shadow-xl",
+      "w-11/12",
+      "h-72"
+    );
+    imgTarjetaCharacter.id = `${character.id}`;
+    // Traer personajes dentro de comics
+
+    let urlImgPersComics = new URL(
+      `${urlApi}characters${parametrosAutenticacion}`
+    );
+
+    ////////////////////////////// PROBLEMÓN ///////////////////////////////////////////
+
+    fetch(urlImgPersComics, {
+      method: "GET",
+      headers: {
+        //Authorization: `${publicKey}`,
+        "Content-type": "application/json",
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        let imgPersComics = data.data.results;
+        const objetoPersonaje = imgPersComics.find(
+          (objeto) => objeto.name == arrayInfo.characters.items
+        );
+        console.log(arrayInfo);
+      })
+      .catch((error) => console.error(error));
+
+    imgTarjetaCharacter.src = `${imgPersComics}`;
+
+    ////////////////////////////// PROBLEMÓN ///////////////////////////////////////////
+
+    const nombreCharacter = document.createElement("h3");
+    nombreCharacter.classList.add(
+      "font-bold",
+      "text-base",
+      "p-2",
+      "w-11/12",
+      "bg-black",
+      "h-20",
+      "text-white"
+    );
+    nombreCharacter.id = `${character.id}`;
+    nombreCharacter.textContent = `${character.name}`;
+
+    dataComicsPersonajes.appendChild(tarjetaCharacter);
+    tarjetaCharacter.appendChild(imgTarjetaCharacter);
+    tarjetaCharacter.appendChild(nombreCharacter);
+
+    tarjetaCharacter.addEventListener("click", (event) => {
+      infoId = event.target.id;
+      obtenerInfoObjeto(infoId);
+    });
+  });
 }
 
 //const prueba = document.createElement("h4")
@@ -306,6 +422,43 @@ btnSiguiente.addEventListener("click", () => {
   //getThumbsAndTitles(); Esto se aplica pero no se actualiza
 });
  */
-//Realizar búsqueda
 
-// Actualizar resultados
+/* characters.forEach((character) => {  
+  const tarjetaCharacter = document.createElement("div");
+  tarjetaCharacter.classList.add(
+    "w-full",
+    "sm:w-1/4",
+    "lg:w-1/6",
+    "mb-8",
+    "transition",
+    "ease-in-out",
+    "duration-300",
+    "hover:-translate-y-2",
+    "cursor-pointer"
+  );
+  tarjetaCharacter.id = `${character.id}`;
+
+  const imgTarjetaCharacter = document.createElement("img");
+  imgTarjetaCharacter.classList.add(
+    "object-cover",
+    "items-center",
+    "justify-center",
+    "shadow-xl",
+    "w-11/12",
+    "h-72"
+  );
+  imgTarjetaCharacter.id = `${character.id}`;
+  imgTarjetaCharacter.src = `${character.resourceURI}`;
+
+  const nombreCharacter = document.createElement("h3");
+  nombreCharacter.classList.add(
+    "font-bold",
+    "text-md",
+    "p-2",
+    "w-11/12",
+    "bg-black",
+    "h-20",
+    "text-white"
+  );
+  nombreCharacter.id = `${character.id}`;
+  nombreCharacter.textContent = `${character.name}`;   */
