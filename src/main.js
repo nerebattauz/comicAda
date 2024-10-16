@@ -407,22 +407,61 @@ function personajesComics(arrayInfo, infoId) {
   });
 }
 
-// Mostrar más resultados
-let offset = 0
-
-btnSiguiente.addEventListener("click", (event) => {
-  resultados.innerHTML = `<h2 id="resultados" class="text-2xl font-bold">Resultados</h2>`;
-  urlSearch = new URL(`${urlApi}${selectType.value}${parametrosAutenticacion}`);
-  buscarPorTipo()
-  buscarPorOrden()
-  paginar()
-  traerAPIs();
-});
+// Paginación
+let offset = 0;
+buttonEnabled()
 
 function paginar() {
+  resultados.innerHTML = `<h2 id="resultados" class="text-2xl font-bold">Resultados</h2>`;
+  urlSearch = new URL(`${urlApi}${selectType.value}${parametrosAutenticacion}`);
+  buscarPorTipo();
+  buscarPorOrden();
   const urlOffset = urlSearch.searchParams;
-  offset = offset + 20
-    urlOffset.set("offset", `${offset}`);
-    urlOffset.toString();
-    
+  urlOffset.set("offset", `${offset}`);
+  urlOffset.toString();
+  traerAPIs();
+  buttonEnabled()
+}
+btnSiguiente.addEventListener("click", (event) => {
+  offset = offset + 20;
+  paginar();
+  });
+btnAnterior.addEventListener("click", (event) => {
+  offset = offset - 20;
+  paginar();
+  });
+
+btnUltimo.addEventListener("click", (event) => {
+  offset = totalResultados - 20;
+  paginar();
+});
+
+btnPrimero.addEventListener("click", (event) => {
+  offset = 0;
+  paginar();
+});
+
+function buttonEnabled() {
+  if (offset === 0) {
+    btnPrimero.classList.add("bg-slate-600");
+    btnPrimero.disabled = true;
+    btnAnterior.classList.add("bg-slate-600");
+    btnAnterior.disabled = true;
+  } else {
+    btnPrimero.classList.remove("bg-slate-600");
+    btnPrimero.disabled = false;
+    btnAnterior.classList.remove("bg-slate-600");
+    btnAnterior.disabled = false;
   }
+  if (offset === totalResultados - 20){
+    btnUltimo.classList.add("bg-slate-600");
+    btnUltimo.disabled = true;
+    btnSiguiente.classList.add("bg-slate-600");
+    btnSiguiente.disabled = true;
+  } else {
+    btnUltimo.classList.remove("bg-slate-600");
+    btnUltimo.disabled = false;
+    btnSiguiente.classList.remove("bg-slate-600");
+    btnSiguiente.disabled = false;
+  }
+}
