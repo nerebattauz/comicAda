@@ -407,58 +407,22 @@ function personajesComics(arrayInfo, infoId) {
   });
 }
 
-//const prueba = document.createElement("h4")
-//prueba.textContent = `${idComic}`
-//resultadosBusqueda.appendChild(prueba)
+// Mostrar más resultados
+let offset = 0
 
-//btnBuscar.addEventListener("click", aplicarBusqueda());
-
-/* // Mostrar más resultados
-
-btnSiguiente.addEventListener("click", () => {
-  actualizarResultados();
-  offset += 20;
-  btnSiguiente.classList.add("bg-red-600");
-  //getThumbsAndTitles(); Esto se aplica pero no se actualiza
+btnSiguiente.addEventListener("click", (event) => {
+  resultados.innerHTML = `<h2 id="resultados" class="text-2xl font-bold">Resultados</h2>`;
+  urlSearch = new URL(`${urlApi}${selectType.value}${parametrosAutenticacion}`);
+  buscarPorTipo()
+  buscarPorOrden()
+  paginar()
+  traerAPIs();
 });
- */
 
-/* characters.forEach((character) => {  
-  const tarjetaCharacter = document.createElement("div");
-  tarjetaCharacter.classList.add(
-    "w-full",
-    "sm:w-1/4",
-    "lg:w-1/6",
-    "mb-8",
-    "transition",
-    "ease-in-out",
-    "duration-300",
-    "hover:-translate-y-2",
-    "cursor-pointer"
-  );
-  tarjetaCharacter.id = `${character.id}`;
-
-  const imgTarjetaCharacter = document.createElement("img");
-  imgTarjetaCharacter.classList.add(
-    "object-cover",
-    "items-center",
-    "justify-center",
-    "shadow-xl",
-    "w-11/12",
-    "h-72"
-  );
-  imgTarjetaCharacter.id = `${character.id}`;
-  imgTarjetaCharacter.src = `${character.resourceURI}`;
-
-  const nombreCharacter = document.createElement("h3");
-  nombreCharacter.classList.add(
-    "font-bold",
-    "text-md",
-    "p-2",
-    "w-11/12",
-    "bg-black",
-    "h-20",
-    "text-white"
-  );
-  nombreCharacter.id = `${character.id}`;
-  nombreCharacter.textContent = `${character.name}`;   */
+function paginar() {
+  const urlOffset = urlSearch.searchParams;
+  offset = offset + 20
+    urlOffset.set("offset", `${offset}`);
+    urlOffset.toString();
+    
+  }
