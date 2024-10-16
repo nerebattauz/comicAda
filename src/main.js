@@ -47,7 +47,7 @@ function traerAPIs() {
       dataResultados = data.data.results;
       mostrarCantResultados();
       getCards();
-      enableDisable()
+      enableDisable();
     })
     .catch((error) => console.error(error));
 }
@@ -177,7 +177,7 @@ function getCards() {
 
 //Buscar por parametros
 btnBuscar.addEventListener("click", (event) => {
-  offset = 0
+  offset = 0;
   resultados.innerHTML = `<h2 id="resultados" class="text-2xl font-bold">Resultados</h2>`;
   urlSearch = new URL(`${urlApi}${selectType.value}${parametrosAutenticacion}`);
   buscarPorTipo();
@@ -441,70 +441,33 @@ btnPrimero.addEventListener("click", (event) => {
   paginar();
 });
 
-/////////////// RESOLVER //////////////////
+//Habilitar / Deshabilitar botones
 
-function buttonDisabled(boton) {
-    boton.classList.add("bg-slate-600")
-    boton.disabled = true
-  }
+function buttonDisabled(...boton) {
+  boton.forEach((boton) => {
+    boton.classList.add("text-slate-500");
+    boton.disabled = true;
+  });
+}
 
-function buttonEnabled(boton) {
-    boton.classList.remove("bg-slate-600")
-    boton.disabled = false
-  }
+function buttonEnabled(...boton) {
+  boton.forEach((boton) => {
+    boton.classList.remove("text-slate-500");
+    boton.disabled = false;
+  });
+}
 
-function enableDisable(){
-  if (offset <= 0 && totalResultados > 20){
-    buttonDisabled(btnPrimero)
-    buttonDisabled(btnAnterior)
-    buttonEnabled(btnSiguiente)
-    buttonEnabled(btnUltimo)    
-  } else if (offset >= 20 && offset < totalResultados - 20){
-    buttonEnabled(btnPrimero)
-    buttonEnabled(btnAnterior)
-    buttonEnabled(btnSiguiente)
-    buttonEnabled(btnUltimo)
-  } else if (offset >= totalResultados - 20){
-    buttonDisabled(btnSiguiente)
-    buttonDisabled(btnUltimo)
-    buttonEnabled(btnPrimero)
-    buttonEnabled(btnAnterior)
+function enableDisable() {
+  if (offset <= 0 && totalResultados > 20) {
+    buttonDisabled(btnPrimero, btnAnterior);
+    buttonEnabled(btnSiguiente, btnUltimo);
+  } else if (offset >= 20 && offset < totalResultados - 20) {
+    buttonEnabled(btnPrimero, btnAnterior, btnSiguiente, btnUltimo);
+  } else if (offset >= totalResultados - 20) {
+    buttonDisabled(btnSiguiente, btnUltimo);
+    buttonEnabled(btnPrimero, btnAnterior);
   }
-  if (totalResultados < 20){
-    buttonDisabled(btnSiguiente)
-    buttonDisabled(btnUltimo)
-    buttonDisabled(btnPrimero)
-    buttonDisabled(btnAnterior)
+  if (totalResultados < 20) {
+    buttonDisabled(btnSiguiente, btnUltimo, btnPrimero, btnAnterior);
   }
 }
-  /* if (offset <= 0) {
-    btnPrimero.classList.add("bg-slate-600");
-    btnPrimero.disabled = true;
-    btnAnterior.classList.add("bg-slate-600");
-    btnAnterior.disabled = true;
-  } else {
-    btnPrimero.classList.remove("bg-slate-600");
-    btnPrimero.disabled = false;
-    btnAnterior.classList.remove("bg-slate-600");
-    btnAnterior.disabled = false;
-  }
-  if (offset >= totalResultados - 20){
-    btnUltimo.classList.add("bg-slate-600");
-    btnUltimo.disabled = true;
-    btnSiguiente.classList.add("bg-slate-600");
-    btnSiguiente.disabled = true;
-  } else {
-    btnUltimo.classList.remove("bg-slate-600");
-    btnUltimo.disabled = false;
-    btnSiguiente.classList.remove("bg-slate-600");
-    btnSiguiente.disabled = false;
-  } */
-
-/////////////// RESOLVER //////////////////
-
-/* function buttonDisabled() {
-  let botones = [btnPrimero, btnAnterior, btnSiguiente, btnUltimo]
-  botones.forEach(boton => {
-    boton.classList.add("bg-slate-600", deshabilitado)
-    boton.disabled = true
-  })} */
