@@ -57,10 +57,75 @@ traerAPIs();
 function mostrarCantResultados() {
   cantidadResultados.textContent = `${totalResultados} RESULTADOS`;
   if (totalResultados === 0) {
-    const textoNoResultados = document.createElement("h4");
-    textoNoResultados.textContent = "No se encontraron resultados";
-    textoNoResultados.classList.add("text-2xl", "font-bold", "my-7");
-    resultadosBusqueda.appendChild(textoNoResultados);
+    noResultados();
+  }
+}
+
+function noResultados() {
+  const textoNoResultados = document.createElement("h4");
+  textoNoResultados.textContent = "No se encontraron resultados";
+  textoNoResultados.classList.add("text-2xl", "font-bold", "my-7");
+  resultadosBusqueda.appendChild(textoNoResultados);
+}
+// Paginación
+
+function paginar() {
+  resultados.innerHTML = `<h2 id="resultados" class="text-2xl font-bold">Resultados</h2>`;
+  urlSearch = new URL(`${urlApi}${selectType.value}${parametrosAutenticacion}`);
+  buscarPorTipo();
+  buscarPorOrden();
+  const urlOffset = urlSearch.searchParams;
+  urlOffset.set("offset", `${offset}`);
+  urlOffset.toString();
+  traerAPIs();
+}
+btnSiguiente.addEventListener("click", (event) => {
+  offset = offset + 20;
+  paginar();
+});
+btnAnterior.addEventListener("click", (event) => {
+  offset = offset - 20;
+  paginar();
+});
+
+btnUltimo.addEventListener("click", (event) => {
+  offset = totalResultados - 20;
+  paginar();
+});
+
+btnPrimero.addEventListener("click", (event) => {
+  offset = 0;
+  paginar();
+});
+
+//Habilitar / Deshabilitar botones
+
+function buttonDisabled(...boton) {
+  boton.forEach((boton) => {
+    boton.classList.add("text-slate-500");
+    boton.disabled = true;
+  });
+}
+
+function buttonEnabled(...boton) {
+  boton.forEach((boton) => {
+    boton.classList.remove("text-slate-500");
+    boton.disabled = false;
+  });
+}
+
+function enableDisable() {
+  if (offset <= 0 && totalResultados > 20) {
+    buttonDisabled(btnPrimero, btnAnterior);
+    buttonEnabled(btnSiguiente, btnUltimo);
+  } else if (offset >= 20 && offset < totalResultados - 20) {
+    buttonEnabled(btnPrimero, btnAnterior, btnSiguiente, btnUltimo);
+  } else if (offset >= totalResultados - 20) {
+    buttonDisabled(btnSiguiente, btnUltimo);
+    buttonEnabled(btnPrimero, btnAnterior);
+  }
+  if (totalResultados < 20) {
+    buttonDisabled(btnSiguiente, btnUltimo, btnPrimero, btnAnterior);
   }
 }
 
@@ -237,8 +302,7 @@ function obtenerInfoObjeto(infoId) {
   detalleObjeto(arrayInfo);
 }
 
-const dataComicsPersonajes = document.createElement("div");
-
+// Devolver detalle comic
 function detalleObjeto(arrayInfo) {
   //mostrar detalle comics
   if (selectType.value == "comics") {
@@ -281,17 +345,130 @@ function detalleObjeto(arrayInfo) {
         <h4 class="text-lg font-bold">Autores:</h4>
         <h4 class="text-base font-normal mb-4 font-medium text-slate-600">${autor}</h4>
         <h4 class="text-lg font-bold">Descripción:</h4>
-        <h4 class="text-base font-normal">${arrayInfo.description}</h4>
+        <h4 class="text-base font-normal">${arrayInfo.description}</h4>`;
 
-    `;
+    //////// TRAER PERSONAJE DENTRO DE COMIC ///////////
 
-    dataComicsPersonajes.innerHTML = `<h2 class="text-2xl my-8">Personajes</h2>`;
+    // Sección personajes dentro del detalle comic
+    const dataComicsPersonajes = document.createElement("div");
+    dataComicsPersonajes.classList.add(
+      "w-full",
+      "m-auto",
+      "sm:justify-start"
+    );
+
+    const tarjetasCharacter = document.createElement("div");
+    tarjetasCharacter.classList.add(
+      "w-full",
+      "flex",
+      "flex-wrap",
+      "m-auto",
+      "sm:justify-start"
+    );
+    
+
+    const characters = arrayInfo.characters.items;
+    let totalResultados = arrayInfo.characters.available;
+
+    const textoPersonajes = document.createElement("div");
+    textoPersonajes.innerHTML = `<h2 class="text-2xl font-bold mt-8 mb-4">Personajes</h2>
+    <h4 class="py-4 text-slate-400 font-bold text-sm">${totalResultados} RESULTADOS</h4>`
+    if ((totalResultados == 0)) {
+      noResultados()
+    }
+
+    // Traer personajes dentro de comics
+
+    function personajesComics(arrayInfo, infoId) {
+      characters.forEach((character) => {
+        const tarjetaCharacter = document.createElement("div");
+        tarjetaCharacter.classList.add(
+          "w-full",
+          "sm:w-1/2",
+          "lg:w-1/4",
+          "mb-8",
+          "transition",
+          "ease-in-out",
+          "duration-300",
+          "hover:-translate-y-2",
+          "cursor-pointer"
+        );
+        tarjetaCharacter.id = `${character.id}`;
+
+        const imgTarjetaCharacter = document.createElement("img");
+        imgTarjetaCharacter.classList.add(
+          "object-cover",
+          "items-center",
+          "justify-center",
+          "shadow-xl",
+          "w-11/12",
+          "h-72"
+        );
+        imgTarjetaCharacter.id = `${character.id}`;
+
+        const nombreCharacter = document.createElement("h3");
+        nombreCharacter.classList.add(
+          "font-bold",
+          "text-base",
+          "p-2",
+          "w-11/12",
+          "bg-black",
+          "h-20",
+          "text-white"
+        );
+        nombreCharacter.id = `${character.id}`;
+        nombreCharacter.textContent = `${character.name}`;
+
+        /* // Traer personajes dentro de comics
+
+    const urlImgPersComics = new URL(
+      `${urlApi}characters${parametrosAutenticacion}`
+    );
+
+    fetch(urlImgPersComics, {
+      method: "GET",
+      headers: {
+        //Authorization: `${publicKey}`,
+        "Content-type": "application/json",
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        let imgPersComics = data.data.results;
+        const objetoPersonaje = imgPersComics.find(
+          (objeto) => objeto.name == arrayInfo.characters.items
+        );
+        console.log(arrayInfo);
+      })
+      .catch((error) => console.error(error));
+
+    imgTarjetaCharacter.src = `${imgPersComics}`; */
+
+        ////////////////////////////// PROBLEMÓN ///////////////////////////////////////////
+
+        dataComicsPersonajes.appendChild(textoPersonajes);
+        dataComicsPersonajes.appendChild(tarjetasCharacter);
+        tarjetasCharacter.appendChild(tarjetaCharacter);
+        tarjetaCharacter.appendChild(imgTarjetaCharacter);
+        tarjetaCharacter.appendChild(nombreCharacter);
+
+        tarjetaCharacter.addEventListener("click", (event) => {
+          infoId = event.target.id;
+          obtenerInfoObjeto(infoId);
+        });
+      });
+    }
 
     resultados.appendChild(dataComicsDetails);
     dataComicsDetails.appendChild(dataComicsImg);
     dataComicsDetails.appendChild(dataComicsInfo);
+    resultados.appendChild(textoPersonajes);
     resultados.appendChild(dataComicsPersonajes);
     personajesComics(arrayInfo);
+
+
+
+
   } else if (selectType.value == "characters") {
     const dataCharactersDetails = document.createElement("div");
     dataCharactersDetails.classList.add("flex", "flex-col", "sm:flex-row");
@@ -326,148 +503,6 @@ function detalleObjeto(arrayInfo) {
     dataCharactersDetails.appendChild(dataCharactersImg);
     dataCharactersDetails.appendChild(dataCharactersInfo);
     resultados.appendChild(dataComicsPersonajes);
-  }
-}
-
-//////// Traer personajes en comic
-function personajesComics(arrayInfo, infoId) {
-  const characters = arrayInfo.characters.items;
-  characters.forEach((character) => {
-    const tarjetaCharacter = document.createElement("div");
-    tarjetaCharacter.classList.add(
-      "w-full",
-      "sm:w-1/4",
-      "lg:w-1/6",
-      "mb-8",
-      "transition",
-      "ease-in-out",
-      "duration-300",
-      "hover:-translate-y-2",
-      "cursor-pointer"
-    );
-    tarjetaCharacter.id = `${character.id}`;
-
-    const imgTarjetaCharacter = document.createElement("img");
-    imgTarjetaCharacter.classList.add(
-      "object-cover",
-      "items-center",
-      "justify-center",
-      "shadow-xl",
-      "w-11/12",
-      "h-72"
-    );
-    imgTarjetaCharacter.id = `${character.id}`;
-    // Traer personajes dentro de comics
-
-    let urlImgPersComics = new URL(
-      `${urlApi}characters${parametrosAutenticacion}`
-    );
-
-    ////////////////////////////// PROBLEMÓN ///////////////////////////////////////////
-
-    fetch(urlImgPersComics, {
-      method: "GET",
-      headers: {
-        //Authorization: `${publicKey}`,
-        "Content-type": "application/json",
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        let imgPersComics = data.data.results;
-        const objetoPersonaje = imgPersComics.find(
-          (objeto) => objeto.name == arrayInfo.characters.items
-        );
-        console.log(arrayInfo);
-      })
-      .catch((error) => console.error(error));
-
-    imgTarjetaCharacter.src = `${imgPersComics}`;
-
-    ////////////////////////////// PROBLEMÓN ///////////////////////////////////////////
-
-    const nombreCharacter = document.createElement("h3");
-    nombreCharacter.classList.add(
-      "font-bold",
-      "text-base",
-      "p-2",
-      "w-11/12",
-      "bg-black",
-      "h-20",
-      "text-white"
-    );
-    nombreCharacter.id = `${character.id}`;
-    nombreCharacter.textContent = `${character.name}`;
-
-    dataComicsPersonajes.appendChild(tarjetaCharacter);
-    tarjetaCharacter.appendChild(imgTarjetaCharacter);
-    tarjetaCharacter.appendChild(nombreCharacter);
-
-    tarjetaCharacter.addEventListener("click", (event) => {
-      infoId = event.target.id;
-      obtenerInfoObjeto(infoId);
-    });
-  });
-}
-
-// Paginación
-
-function paginar() {
-  resultados.innerHTML = `<h2 id="resultados" class="text-2xl font-bold">Resultados</h2>`;
-  urlSearch = new URL(`${urlApi}${selectType.value}${parametrosAutenticacion}`);
-  buscarPorTipo();
-  buscarPorOrden();
-  const urlOffset = urlSearch.searchParams;
-  urlOffset.set("offset", `${offset}`);
-  urlOffset.toString();
-  traerAPIs();
-}
-btnSiguiente.addEventListener("click", (event) => {
-  offset = offset + 20;
-  paginar();
-});
-btnAnterior.addEventListener("click", (event) => {
-  offset = offset - 20;
-  paginar();
-});
-
-btnUltimo.addEventListener("click", (event) => {
-  offset = totalResultados - 20;
-  paginar();
-});
-
-btnPrimero.addEventListener("click", (event) => {
-  offset = 0;
-  paginar();
-});
-
-//Habilitar / Deshabilitar botones
-
-function buttonDisabled(...boton) {
-  boton.forEach((boton) => {
-    boton.classList.add("text-slate-500");
-    boton.disabled = true;
-  });
-}
-
-function buttonEnabled(...boton) {
-  boton.forEach((boton) => {
-    boton.classList.remove("text-slate-500");
-    boton.disabled = false;
-  });
-}
-
-function enableDisable() {
-  if (offset <= 0 && totalResultados > 20) {
-    buttonDisabled(btnPrimero, btnAnterior);
-    buttonEnabled(btnSiguiente, btnUltimo);
-  } else if (offset >= 20 && offset < totalResultados - 20) {
-    buttonEnabled(btnPrimero, btnAnterior, btnSiguiente, btnUltimo);
-  } else if (offset >= totalResultados - 20) {
-    buttonDisabled(btnSiguiente, btnUltimo);
-    buttonEnabled(btnPrimero, btnAnterior);
-  }
-  if (totalResultados < 20) {
-    buttonDisabled(btnSiguiente, btnUltimo, btnPrimero, btnAnterior);
+    dataComicsPersonajes.appendChild(tarjetasPersonajesDentroComics)
   }
 }
