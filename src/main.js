@@ -1,4 +1,4 @@
-const urlApi = "http://gateway.marvel.com/v1/public/";
+const urlApi = "https://gateway.marvel.com/v1/public/";
 const publicKey = "a0e60653f7b944f5d9b5c09f1138a4aa";
 const ts = "timestamp";
 const hash = "21a300809c6bd1a8f0eeb61d1578a609";
