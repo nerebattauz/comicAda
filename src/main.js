@@ -384,7 +384,7 @@ function detalleObjeto(arrayInfo) {
     function personajesComics(arrayInfo, infoId) {
       characters.forEach((character) => {
         // Traer imagenes de personajes dentro de comics
-        const resourceUriCharacters = character.resourceURI;
+        let resourceUriCharacters = character.resourceURI;
         if (resourceUriCharacters.startsWith("http://")){
           resourceUriCharacters = resourceUriCharacters.replace("http://", "https://")
         }
@@ -525,7 +525,7 @@ function detalleObjeto(arrayInfo) {
     function comicsPersonajes() {
       comics.forEach((comic) => {
         // Traer imagenes de personajes dentro de comics
-        const resourceUriComics = comic.resourceURI;
+        let resourceUriComics = comic.resourceURI;
 
         if (resourceUriComics.startsWith("http://")){
           resourceUriComics = resourceUriComics.replace("http://", "https://")
