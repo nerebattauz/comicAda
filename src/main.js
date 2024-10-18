@@ -311,10 +311,15 @@ function detalleObjeto(arrayInfo) {
     const fechaPublicacion = new Intl.DateTimeFormat("es-AR").format(
       new Date(arrayInfo.dates.find((date) => date.type === "onsaleDate").date)
     );
-    const autor = arrayInfo.creators.items
+    
+    let autor = arrayInfo.creators.items
       .filter((autor) => autor.role === "writer")
       .map((autor) => autor.name)
       .join(", ");
+    if (autor.length === 0) {autor = "Creador no disponible"};
+
+    let description = arrayInfo.description
+    if (description === "") {description = "Descripción no disponible"};
 
     const dataComicsDetails = document.createElement("div");
     dataComicsDetails.classList.add("flex", "flex-col", "sm:flex-row");
@@ -347,7 +352,7 @@ function detalleObjeto(arrayInfo) {
         <h4 class="text-lg font-bold">Autores:</h4>
         <h4 class="text-base font-normal mb-4 font-medium text-slate-600">${autor}</h4>
         <h4 class="text-lg font-bold">Descripción:</h4>
-        <h4 class="text-base font-normal">${arrayInfo.description}</h4>`;
+        <h4 class="text-base font-normal">${description}</h4>`;
 
     //////// PERSONAJES DENTRO DE COMIC ///////////
 
