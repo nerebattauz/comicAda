@@ -1,36 +1,38 @@
 <!DOCTYPE html>
 <html lang="es">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+      rel="shortcut icon"
+      href="./assets/Mfavicon.png"
+      type="image/x-icon">
     <link
       href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap"
-      rel="stylesheet"
-    />
-    <script src="https://cdn.tailwindcss.com"></script>
+      rel="stylesheet">
     <title>Marvel Comics by Nere</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Freeman&family=Poetsen+One&display=swap");
+      @import url("https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap");
+      header {
+        font-family: "Freeman", sans-serif;
+        font-weight: 800;
+      }
+      .bg-hero {
+        width: 100%;
+        height: 400px;
+        background-image: url(./assets/personajes-de-marvel.webp);
+        background-position-x: center;
+        background-size: cover;
+      }
+      section main {
+        font-family: "Open Sans", sans-serif;
+      }
+    </style>
   </head>
-
-  <style>
-    @import url("https://fonts.googleapis.com/css2?family=Freeman&family=Poetsen+One&display=swap");
-    @import url("https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap");
-    header {
-      font-family: "Freeman", sans-serif;
-      font-weight: 800;
-    }
-    .bg-hero {
-      width: 100%;
-      height: 400px;
-      background-image: url(./assets/personajes-de-marvel.webp);
-      background-position-x: center;
-      background-size: cover;
-    }
-    section main {
-      font-family: "Open Sans", sans-serif;
-    }
-  </style>
 
   <body class="w-full">
     <header>
@@ -61,7 +63,7 @@
             placeholder="Buscar"
             class="w-full focus:outline-none text-lg"
             value=""
-          />
+          >
         </div>
         <div class="flex gap-4 items-center justify-start w-full md:w-1/2">
           <div>
@@ -93,7 +95,9 @@
       <h4
         id="cantidad-resultados"
         class="py-4 text-slate-400 font-bold text-sm"
-      ></h4>
+      >
+        RESULTADOS
+      </h4>
       <!-- Resultados de la búsqueda -->
       <div
         id="resultados-busqueda"
@@ -121,13 +125,13 @@
     <footer
       class="w-full h-20 bg-black text-white flex justify-center items-center font-bold"
     >
-      Hecho por Nere
+      TP Api Marvel | Made by Nere
     </footer>
+    <script
+      src="https://kit.fontawesome.com/aa9529ca56.js"
+      crossorigin="anonymous"
+    ></script>
+    <script src="./src/env.js"></script>
+    <script src="./src/main.js"></script>
   </body>
-  <script
-    src="https://kit.fontawesome.com/aa9529ca56.js"
-    crossorigin="anonymous"
-  ></script>
-  <script src="./src/env.js"></script>
-  <script src="./src/main.js"></script>
 </html>
