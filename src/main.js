@@ -171,6 +171,7 @@ function getComicCards() {
     tarjetaComic.appendChild(tituloTarjetaComic);
 
     tarjetaComic.addEventListener("click", (event) => {
+      buttonDisabled(btnSiguiente, btnUltimo, btnPrimero, btnAnterior);
       let infoId = event.target.id;
       obtenerInfoObjeto(infoId);
     });
@@ -225,7 +226,8 @@ function getCharacterCards(arrayInfo) {
     tarjetaCharacter.appendChild(nombreCharacter);
 
     tarjetaCharacter.addEventListener("click", (event) => {
-      infoId = event.target.id;
+      buttonDisabled(btnSiguiente, btnUltimo, btnPrimero, btnAnterior);
+      let infoId = event.target.id;
       obtenerInfoObjeto(infoId);
     });
   });
@@ -347,15 +349,11 @@ function detalleObjeto(arrayInfo) {
         <h4 class="text-lg font-bold">Descripción:</h4>
         <h4 class="text-base font-normal">${arrayInfo.description}</h4>`;
 
-    //////// TRAER PERSONAJE DENTRO DE COMIC ///////////
+    //////// PERSONAJES DENTRO DE COMIC ///////////
 
     // Sección personajes dentro del detalle comic
     const dataComicsPersonajes = document.createElement("div");
-    dataComicsPersonajes.classList.add(
-      "w-full",
-      "m-auto",
-      "sm:justify-start"
-    );
+    dataComicsPersonajes.classList.add("w-full", "m-auto", "sm:justify-start");
 
     const tarjetasCharacter = document.createElement("div");
     tarjetasCharacter.classList.add(
@@ -365,100 +363,90 @@ function detalleObjeto(arrayInfo) {
       "m-auto",
       "sm:justify-start"
     );
-    
 
     const characters = arrayInfo.characters.items;
     let totalResultados = arrayInfo.characters.available;
 
     const textoPersonajes = document.createElement("div");
     textoPersonajes.innerHTML = `<h2 class="text-2xl font-bold mt-8 mb-4">Personajes</h2>
-    <h4 class="py-4 text-slate-400 font-bold text-sm">${totalResultados} RESULTADOS</h4>`
-    if ((totalResultados == 0)) {
-      noResultados()
+    <h4 class="py-4 text-slate-400 font-bold text-sm">${totalResultados} RESULTADOS</h4>`;
+    if (totalResultados == 0) {
+      noResultados();
     }
 
     // Traer personajes dentro de comics
 
     function personajesComics(arrayInfo, infoId) {
       characters.forEach((character) => {
-        const tarjetaCharacter = document.createElement("div");
-        tarjetaCharacter.classList.add(
-          "w-full",
-          "sm:w-1/2",
-          "lg:w-1/4",
-          "mb-8",
-          "transition",
-          "ease-in-out",
-          "duration-300",
-          "hover:-translate-y-2",
-          "cursor-pointer"
+        // Traer imagenes de personajes dentro de comics
+        const resourceUriCharacters = character.resourceURI;
+        const urlImgPersComics = new URL(
+          `${resourceUriCharacters}${parametrosAutenticacion}`
         );
-        tarjetaCharacter.id = `${character.id}`;
 
-        const imgTarjetaCharacter = document.createElement("img");
-        imgTarjetaCharacter.classList.add(
-          "object-cover",
-          "items-center",
-          "justify-center",
-          "shadow-xl",
-          "w-11/12",
-          "h-72"
-        );
-        imgTarjetaCharacter.id = `${character.id}`;
+        function fetchComicCharacters() {
+          fetch(urlImgPersComics, {
+            method: "GET",
+            headers: {
+              //Authorization: `${publicKey}`,
+              "Content-type": "application/json",
+            },
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              let characterData = data.data.results[0];
+              let imgCharacterData = `${characterData.thumbnail.path}.${characterData.thumbnail.extension}`;
+              //console.log(characterData.name)
 
-        const nombreCharacter = document.createElement("h3");
-        nombreCharacter.classList.add(
-          "font-bold",
-          "text-base",
-          "p-2",
-          "w-11/12",
-          "bg-black",
-          "h-20",
-          "text-white"
-        );
-        nombreCharacter.id = `${character.id}`;
-        nombreCharacter.textContent = `${character.name}`;
+              const tarjetaCharacter = document.createElement("div");
+              tarjetaCharacter.classList.add(
+                "w-full",
+                "sm:w-1/4",
+                "lg:w-1/6",
+                "mb-8",
+                "transition",
+                "ease-in-out",
+                "duration-300",             
+              );
+              tarjetaCharacter.id = `${characterData.id}`;
 
-        /* // Traer personajes dentro de comics
+              const imgTarjetaCharacter = document.createElement("img");
+              imgTarjetaCharacter.classList.add(
+                "object-cover",
+                "items-center",
+                "justify-center",
+                "shadow-xl",
+                "w-11/12",
+                "h-72"
+              );
+              imgTarjetaCharacter.src = imgCharacterData;
 
-    const urlImgPersComics = new URL(
-      `${urlApi}characters${parametrosAutenticacion}`
-    );
+              const nombreCharacter = document.createElement("h3");
+              nombreCharacter.classList.add(
+                "font-bold",
+                "text-base",
+                "p-2",
+                "w-11/12",
+                "bg-black",
+                "h-20",
+                "text-white"
+              );
+              nombreCharacter.id = `${characterData.id}`;
+              nombreCharacter.textContent = `${characterData.name}`;
 
-    fetch(urlImgPersComics, {
-      method: "GET",
-      headers: {
-        //Authorization: `${publicKey}`,
-        "Content-type": "application/json",
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        let imgPersComics = data.data.results;
-        const objetoPersonaje = imgPersComics.find(
-          (objeto) => objeto.name == arrayInfo.characters.items
-        );
-        console.log(arrayInfo);
-      })
-      .catch((error) => console.error(error));
-
-    imgTarjetaCharacter.src = `${imgPersComics}`; */
-
-        ////////////////////////////// PROBLEMÓN ///////////////////////////////////////////
-
-        dataComicsPersonajes.appendChild(textoPersonajes);
-        dataComicsPersonajes.appendChild(tarjetasCharacter);
-        tarjetasCharacter.appendChild(tarjetaCharacter);
-        tarjetaCharacter.appendChild(imgTarjetaCharacter);
-        tarjetaCharacter.appendChild(nombreCharacter);
-
-        tarjetaCharacter.addEventListener("click", (event) => {
-          infoId = event.target.id;
-          obtenerInfoObjeto(infoId);
-        });
+              // Componer la tarjeta del Character
+              dataComicsPersonajes.appendChild(tarjetasCharacter);
+              tarjetasCharacter.appendChild(tarjetaCharacter);
+              tarjetaCharacter.appendChild(imgTarjetaCharacter);
+              tarjetaCharacter.appendChild(nombreCharacter);
+            })
+            .catch((error) => console.error(error));
+        }
+        fetchComicCharacters();
       });
     }
 
+    //Armar sección info comics
     resultados.appendChild(dataComicsDetails);
     dataComicsDetails.appendChild(dataComicsImg);
     dataComicsDetails.appendChild(dataComicsInfo);
@@ -466,9 +454,7 @@ function detalleObjeto(arrayInfo) {
     resultados.appendChild(dataComicsPersonajes);
     personajesComics(arrayInfo);
 
-
-
-
+    //ingresar a tarjeta Character
   } else if (selectType.value == "characters") {
     const dataCharactersDetails = document.createElement("div");
     dataCharactersDetails.classList.add("flex", "flex-col", "sm:flex-row");
@@ -499,10 +485,112 @@ function detalleObjeto(arrayInfo) {
           <h4 class="text-lg font-bold">Descripción:</h4>
           <h4 class="text-base font-normal">${arrayInfo.description}</h4>`;
 
+    //////////////// COMICS DENTRO DE PERSONAJE /////////////////
+
+    // Sección personajes dentro del detalle comic
+    const dataPersonajeSComics = document.createElement("div");
+    dataPersonajeSComics.classList.add("w-full", "m-auto", "sm:justify-start");
+
+    const tarjetasComics = document.createElement("div");
+    tarjetasComics.classList.add(
+      "w-full",
+      "flex",
+      "flex-row",
+      "flex-wrap",
+      "m-auto",
+      "sm:justify-start"
+    );
+
+    const comics = arrayInfo.comics.items;
+    let totalResultados = arrayInfo.comics.available;
+
+    const textoComics = document.createElement("div");
+    textoComics.innerHTML = `<h2 class="text-2xl font-bold mt-8 mb-4">Comics</h2>
+   <h4 class="py-4 text-slate-400 font-bold text-sm">${totalResultados} RESULTADOS</h4>`;
+    if (totalResultados == 0) {
+      noResultados();
+    }
+
+    // Traer personajes dentro de comics
+
+    function comicsPersonajes() {
+      comics.forEach((comic) => {
+        // Traer imagenes de personajes dentro de comics
+        const resourceUriComics = comic.resourceURI;
+        const urlImgComicPers = new URL(
+          `${resourceUriComics}${parametrosAutenticacion}`
+        );
+        console.log(urlImgComicPers)
+
+        function fetchCharacterComics() {
+          fetch(urlImgComicPers, {
+            method: "GET",
+            headers: {
+              //Authorization: `${publicKey}`,
+              "Content-type": "application/json",
+            },
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              //console.log(limit)
+              let comicData = data.data.results[0];
+              let imgComicsPers = `${comicData.thumbnail.path}.${comicData.thumbnail.extension}`;
+
+              const tarjetaComic = document.createElement("div");
+              tarjetaComic.classList.add(
+                "w-full",
+                "sm:w-1/3",
+                "lg:w-1/5",
+                "mb-8"
+              );
+              tarjetaComic.id = `${comicData.id}`;
+
+              const imgTarjetaComic = document.createElement("img");
+              imgTarjetaComic.classList.add(
+                "object-cover",
+                "items-center",
+                "justify-center",
+                "shadow-xl",
+                "w-11/12",
+                "h-72"
+              );
+              imgTarjetaComic.src = imgComicsPers;
+
+              const nombreComic = document.createElement("h3");
+              nombreComic.classList.add(
+                "font-bold",
+                "text-base",
+                "p-2",
+                "w-11/12",
+                "bg-black",
+                "h-20",
+                "text-white"
+              );
+              nombreComic.id = `${comicData.id}`;
+              nombreComic.textContent = `${comicData.title}`;
+
+              // Componer la tarjeta del Character
+              dataPersonajeSComics.appendChild(tarjetasComics);
+              tarjetasComics.appendChild(tarjetaComic);
+              tarjetaComic.appendChild(imgTarjetaComic);
+              tarjetaComic.appendChild(nombreComic);
+
+            })
+            .catch((error) => console.error(error));
+        }
+        fetchCharacterComics();
+      });
+    }
+
+    /////////////////////////////////
+
+    //Armar sección info characters
     resultados.appendChild(dataCharactersDetails);
     dataCharactersDetails.appendChild(dataCharactersImg);
     dataCharactersDetails.appendChild(dataCharactersInfo);
-    resultados.appendChild(dataComicsPersonajes);
-    dataComicsPersonajes.appendChild(tarjetasPersonajesDentroComics)
+    resultados.appendChild(textoComics);
+    resultados.appendChild(dataPersonajeSComics);
+    comicsPersonajes(arrayInfo);
   }
 }
+
